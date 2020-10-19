@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Threading;
 using UnityEngine;
 
 public class ProjectileLine : MonoBehaviour {
@@ -34,7 +35,11 @@ public class ProjectileLine : MonoBehaviour {
             if (_poi != null) {
                 //When _poi is set to something new, it resets everything
                 line.enabled = false;
-                points = new List<Vector3>();
+                if (Time.time < 2f)
+                {
+                    points = new List<Vector3>();
+                }
+                
                 AddPoint();
             }
         }
