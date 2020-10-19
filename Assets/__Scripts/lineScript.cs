@@ -4,27 +4,22 @@ using UnityEngine;
 
 public class lineScript : MonoBehaviour
 {
-    public GameObject sphere;
-    public GameObject launchPoint;
-    LineRenderer lineRend;
-    // Start is called before the first frame update
+    private LineRenderer LR;
+    public List<Vector2> positions;
+    private Renderer Rend;
+    Vector3 pos;
     void Start()
     {
-        lineRend = gameObject.GetComponent<LineRenderer>();
-
-
+        LR = GetComponent<LineRenderer>();
+        Rend = GetComponent<Renderer>();
+        //Set your GameObject position from where you want draw a line
+        pos = new Vector3(0f, 0f, 0f);
     }
-
-    // Update is called once per frame
     void Update()
     {
-        
-        List<Vector3> pos = new List<Vector3>();
-        pos.Add(sphere.transform.position);
-        pos.Add(launchPoint.transform.position);
-        lineRend.startWidth = 10f;
-        lineRend.endWidth = 10f;
-        lineRend.SetPositions(pos.ToArray());
-        lineRend.useWorldSpace = true;
+        LR.SetPosition(0, pos);
+        Vector3 CursorPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+        LR.SetPosition(1, CursorPosition);
+
     }
 }
