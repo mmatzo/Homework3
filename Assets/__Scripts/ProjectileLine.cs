@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.InteropServices;
 using UnityEngine;
 
 public class ProjectileLine : MonoBehaviour {
@@ -34,9 +35,11 @@ public class ProjectileLine : MonoBehaviour {
         set {
             _poi = value;
             if (_poi != null) {
-                //When _poi is set to something new, it resets everything
-                frozen = true;
-                Instantiate(prefab);
+                line.enabled = false;
+                points = new List<Vector3>();
+                AddPoint();
+
+
             }
         }
     }
@@ -97,6 +100,7 @@ public class ProjectileLine : MonoBehaviour {
     {
         if (frozen == false)
         {
+            
             if (poi == null)
             {
                 //If there is no poi, search for one
@@ -117,7 +121,8 @@ public class ProjectileLine : MonoBehaviour {
             if (FollowCam.POI == null)
             {
                 //Once FollowCam.POI is null, make the local poi null too
-                poi = null;
+                frozen = true;
+                Instantiate(prefab);
             }
         }
     }
