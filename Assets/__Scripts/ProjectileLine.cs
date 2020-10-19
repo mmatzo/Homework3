@@ -1,6 +1,5 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
-using System.Threading;
 using UnityEngine;
 
 public class ProjectileLine : MonoBehaviour {
@@ -8,13 +7,15 @@ public class ProjectileLine : MonoBehaviour {
 
     [Header("Set in Inspector")]
     public float minDist = 0.1f;
-
+    public GameObject prefab;
     private LineRenderer line;
     private GameObject _poi;
     private List<Vector3> points;
+    private bool frozen;
 
     void Awake()
     {
+        frozen = false;
         S = this; //Set the singleton
         //Get a reference to the LineRenderer
         line = GetComponent<LineRenderer>();
@@ -34,13 +35,8 @@ public class ProjectileLine : MonoBehaviour {
             _poi = value;
             if (_poi != null) {
                 //When _poi is set to something new, it resets everything
-                line.enabled = false;
-                if (Time.time < 2f)
-                {
-                    points = new List<Vector3>();
-                }
-                
-                AddPoint();
+                frozen = true;
+                Instantiate(prefab);
             }
         }
     }
@@ -99,27 +95,30 @@ public class ProjectileLine : MonoBehaviour {
 
     private void FixedUpdate()
     {
-        if (poi == null)
+        if (frozen == false)
         {
-            //If there is no poi, search for one
-            if (FollowCam.POI != null)
+            if (poi == null)
             {
-                if (FollowCam.POI.tag == "Projectile")
+                //If there is no poi, search for one
+                if (FollowCam.POI != null)
                 {
-                    poi = FollowCam.POI;
+                    if (FollowCam.POI.tag == "Projectile")
+                    {
+                        poi = FollowCam.POI;
+                    }
+                    else
+                        return;
                 }
                 else
                     return;
             }
-            else
-                return;
-        }
-        //If there is a poi, it's loc is added every FixedUpdate
-        AddPoint();
-        if (FollowCam.POI == null)
-        {
-            //Once FollowCam.POI is null, make the local poi null too
-            poi = null;
+            //If there is a poi, it's loc is added every FixedUpdate
+            AddPoint();
+            if (FollowCam.POI == null)
+            {
+                //Once FollowCam.POI is null, make the local poi null too
+                poi = null;
+            }
         }
     }
 }
