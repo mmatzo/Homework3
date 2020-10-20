@@ -123,7 +123,13 @@ public class ProjectileLine : MonoBehaviour {
                 //Once FollowCam.POI is null, make the local poi null too
                 frozen = true;
                 Instantiate(prefab);
+                Wait();
+                Destroy(this);
             }
         }
+    }
+    IEnumerator Wait()
+    {
+        yield return new WaitForSeconds(10);
     }
 }
