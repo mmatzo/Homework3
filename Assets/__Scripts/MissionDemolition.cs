@@ -1,5 +1,7 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.Globalization;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -16,6 +18,7 @@ public class MissionDemolition : MonoBehaviour {
     [Header("Set in Inspector")]
     public Text uitLevel; //The UIText_Level Text
     public Text uitShots; //The UIText_Shots Text
+    public Text uitShotsHighScore;
     public Text uitButton; //The Text on UIButton_View
     public Vector3 castlePos; //The place to put castles
     public GameObject[] castles; //An array of the castles
@@ -27,11 +30,13 @@ public class MissionDemolition : MonoBehaviour {
     public GameObject castle; //The current castle
     public GameMode mode = GameMode.idle;
     public string showing = "Show Slingshot"; //FollowCam mode
-
+    private string currentLevel;
+    private int lowestEver;
     void Start()
     {
         S = this; //Define the Singleton
-
+        currentLevel = "0";
+        lowestEver = 0;
         level = 0;
         levelMax = castles.Length;
         StartLevel();
@@ -39,6 +44,21 @@ public class MissionDemolition : MonoBehaviour {
 
     void StartLevel()
     {
+        lowestEver = 0;
+        if (PlayerPrefs.HasKey(currentLevel))
+        {
+            lowestEver = PlayerPrefs.GetInt(currentLevel, 0);
+        }
+        if (lowestEver == 0)
+        {
+            uitShotsHighScore.text = "No Current Highscore!";
+        }
+        else
+        {
+            uitShotsHighScore.text = "Highscore: " + lowestEver;
+        }
+
+    
         //Get rid of the old castle if one exists
         if (castle != null)
         {
@@ -94,10 +114,17 @@ public class MissionDemolition : MonoBehaviour {
 
     void NextLevel()
     {
+        if (shotsTaken < lowestEver)
+        {
+            PlayerPrefs.SetInt(currentLevel, shotsTaken);
+        }
         level++;
+        currentLevel = level.ToString();
+        
         if (level == levelMax)
         {
             level = 0;
+            currentLevel = level.ToString();
         }
         StartLevel();
     }
