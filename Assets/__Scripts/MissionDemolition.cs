@@ -52,12 +52,12 @@ public class MissionDemolition : MonoBehaviour {
         if (lowestEver <= 0)
         {
             print("i got here 54" + lowestEver);
-            uitShotsHighScore.text = "No Current Highscore!";
+            uitShotsHighScore.text = "No Current Lowest score!";
         }
         else
         {
             print("i got here 54");
-            uitShotsHighScore.text = "Highscore: " + lowestEver;
+            uitShotsHighScore.text = "Lowest Score: " + lowestEver;
         }
 
     
