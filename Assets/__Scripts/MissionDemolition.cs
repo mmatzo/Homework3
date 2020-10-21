@@ -36,7 +36,7 @@ public class MissionDemolition : MonoBehaviour {
     {
         S = this; //Define the Singleton
         currentLevel = "0";
-        lowestEver = 0;
+        lowestEver = -1;
         level = 0;
         levelMax = castles.Length;
         StartLevel();
@@ -44,17 +44,19 @@ public class MissionDemolition : MonoBehaviour {
 
     void StartLevel()
     {
-        lowestEver = 0;
+        lowestEver = -1;
         if (PlayerPrefs.HasKey(currentLevel))
         {
             lowestEver = PlayerPrefs.GetInt(currentLevel, 0);
         }
-        if (lowestEver == 0)
+        if (lowestEver <= 0)
         {
+            print("i got here 54" + lowestEver);
             uitShotsHighScore.text = "No Current Highscore!";
         }
         else
         {
+            print("i got here 54");
             uitShotsHighScore.text = "Highscore: " + lowestEver;
         }
 
@@ -115,6 +117,10 @@ public class MissionDemolition : MonoBehaviour {
     void NextLevel()
     {
         if (shotsTaken < lowestEver)
+        {
+            PlayerPrefs.SetInt(currentLevel, shotsTaken);
+        }
+        else if (lowestEver == -1)
         {
             PlayerPrefs.SetInt(currentLevel, shotsTaken);
         }
